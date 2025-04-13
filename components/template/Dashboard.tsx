@@ -1,8 +1,4 @@
 import * as React from 'react';
-import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-charts/themeAugmentation';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-import type {} from '@mui/x-tree-view/themeAugmentation';
 import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -14,8 +10,11 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../atoms';
-
 import { AppTheme, Header } from '../molecules';
+import { useSelector, useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../store/store';
+import { RootState } from '../../store/store';
+import { fetchAllUsers } from '../../store/actions/userActions';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -24,14 +23,42 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+const DashboardPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.user) as {
+    user: [] | undefined;
+  };
+  const [error, setError] = React.useState('');
+
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      setError('');
+      try {
+        await dispatch(fetchAllUsers());
+      } catch (error) {
+        setError('Failed to fetch users');
+        console.error('Error fetching users:', error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  const onClick = async () => {
+    setError('');
+    try {
+      await dispatch(fetchAllUsers());
+    } catch (error) {
+      setError('Failed to fetch users');
+      console.error('Error fetching users:', error);
+    }
+  };
+
   return (
-    <AppTheme {...props} themeComponents={xThemeComponents}>
+    <AppTheme themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
         <AppNavbar />
-        {/* Main content */}
         <Box
           component="main"
           sx={(theme) => ({
@@ -50,10 +77,12 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <Header />
-            <MainGrid />
+            <MainGrid onClick={onClick} data={user} status={error} />
           </Stack>
         </Box>
       </Box>
     </AppTheme>
   );
-}
+};
+
+export default DashboardPage;

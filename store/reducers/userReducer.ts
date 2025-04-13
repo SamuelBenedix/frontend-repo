@@ -1,9 +1,17 @@
-import { FETCH_USER_FAILURE, FETCH_USER_REQUEST, FETCH_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS } from "../constant";
+import {
+  FETCH_USER_FAILURE,
+  FETCH_USER_REQUEST,
+  FETCH_USER_SUCCESS,
+  LOGIN_FAILURE,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS
+} from "../constant";
+
 
 const initialState = {
   loading: false,
   user: null,
-  error: null,
+  error: '',
   token: null,
 };
 
@@ -24,7 +32,7 @@ export default function userReducer(state = initialState, action: {
     case LOGIN_SUCCESS:
       return { loading: false, token: action.payload, error: null };
     case LOGIN_FAILURE:
-      return { loading: false, token: null, error: action.payload };
+      return { loading: false, error: action.payload };
 
     default:
       return state;

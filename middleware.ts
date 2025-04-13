@@ -1,31 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { verifyIdToken } from './lib/firebaseAdmin';
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-
-const protectedRoutes = ['/dashboard', '/profile', '/main'];
-
-export async function middleware(req: NextRequest) {
- const pathname = req.nextUrl.pathname;
-
- if (!protectedRoutes.some(route => pathname.startsWith(route))) {
-  return NextResponse.next();
- }
-
- const token = req.cookies.get('token')?.value;
+export function middleware(request: NextRequest) {
+ const token = localStorage.getItem('authToken');
 
  if (!token) {
-  return NextResponse.redirect(new URL('/login', req.url));
+  return NextResponse.redirect(new URL('/login', request.url));
  }
 
- try {
-  await verifyIdToken(token);
-  return NextResponse.next();
- } catch (err) {
-  console.error('Invalid token:', err);
-  return NextResponse.redirect(new URL('/login', req.url));
- }
+ return NextResponse.next();
 }
 
+// protect these routes
 export const config = {
- matcher: ['/dashboard/:path*', '/main/:path*', '/profile/:path*'],
+ matcher: ['/dashboard/:path*', '/profile/:path*'],
 };

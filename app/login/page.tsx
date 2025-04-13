@@ -13,7 +13,7 @@ import { auth } from '../../firebase';
 import { useRouter } from 'next/navigation';
 import { loginSuccess } from '../../store/actions/loginAction';
 import { useDispatch } from 'react-redux';
-import { AppTheme, ForgotPassword, ColorModeSelect } from '../../components';
+import { AppTheme, ForgotPassword } from '../../components';
 import { Card, SignInContainer } from './styles';
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
@@ -76,9 +76,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect
-          sx={{ position: 'fixed', top: '1rem', right: '1rem' }}
-        />
         <Card variant="outlined">
           <Typography
             component="h1"

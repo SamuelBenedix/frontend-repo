@@ -5,7 +5,6 @@ import CustomDatePicker from '../atoms/CustomDatePicker';
 import NavbarBreadcrumbs from '../atoms/NavbarBreadcrumbs';
 import MenuButton from '../atoms/MenuButton';
 import Search from '../atoms/Search';
-import ColorModeIconDropdown from '../atoms/ColorModeIconDropdown';
 
 export default function Header() {
   return (
@@ -28,7 +27,6 @@ export default function Header() {
         <MenuButton showBadge aria-label="Open notifications">
           <NotificationsRoundedIcon />
         </MenuButton>
-        <ColorModeIconDropdown />
       </Stack>
     </Stack>
   );

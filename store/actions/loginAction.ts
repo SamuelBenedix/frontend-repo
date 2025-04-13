@@ -5,6 +5,9 @@ export const loginRequest = () => ({
 });
 
 export const loginSuccess = (token: string) => {
+ if (typeof window !== 'undefined') {
+  localStorage.setItem('authToken', token);
+ }
  return {
   type: LOGIN_SUCCESS,
   payload: token,

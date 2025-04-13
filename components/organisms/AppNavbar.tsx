@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import { SideMenuMobile } from '../molecules';
-import { MenuButton, ColorModeIconDropdown } from '../atoms';
+import { MenuButton } from '../atoms';
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -71,7 +71,6 @@ export default function AppNavbar() {
               Dashboard
             </Typography>
           </Stack>
-          <ColorModeIconDropdown />
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuRoundedIcon />
           </MenuButton>

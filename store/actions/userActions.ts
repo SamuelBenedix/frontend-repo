@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AppDispatch, RootState } from '../store';
+import { AppDispatch } from '../store';
 import { FETCH_USER_FAILURE, FETCH_USER_REQUEST, FETCH_USER_SUCCESS } from '../constant';
+import api from '../../apis/api';
 
 
 export const fetchUsersRequest = () => ({
@@ -18,24 +19,22 @@ export const fetchUsersFailure = (error: string) => ({
 });
 
 export const fetchAllUsers = () => {
- return async (dispatch: AppDispatch, getState: () => RootState) => {
+ return async (dispatch: AppDispatch,) => {
 
-  const state = getState().user;
   dispatch(fetchUsersRequest());
+  const authToken = localStorage.getItem('authToken');
 
   try {
-   const response = await fetch('http://localhost:3001/api/users', {
-    method: 'GET',
+
+   const response = await api.get('/users', {
     headers: {
-     'Authorization': `Bearer ${state.token}`,
+     'Authorization': `Bearer ${authToken}`,
      'Content-Type': 'application/json',
     },
    });
 
-   if (!response.ok) throw new Error('Failed to fetch users');
-
    console.log('response', response);
-   const users = await response.json();
+   const users = response.data;
 
    console.log('users', users);
    dispatch(fetchUsersSuccess(users));
