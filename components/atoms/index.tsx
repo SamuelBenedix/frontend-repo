@@ -5,9 +5,31 @@ import { dataDisplayCustomizations } from './DataDisplay';
 import { feedbackCustomizations } from './Feedback';
 import { navigationCustomizations } from './Navigation';
 import { surfacesCustomizations } from './Surface';
+import CardAlert from './CardAlert';
 import ColorModeSelect from './ColorModeSelect';
+import CustomDatePicker from './CustomDatePicker';
+import CustomizedTreeView from './CustomizedTreeView';
+import HighlightedCard from './HighlightedCard';
+import MenuButton from './MenuButton';
+import MenuContent from './MenuContent';
+import NavbarBreadcrumbs from './NavbarBreadcrumbs';
+import PageViewsBarChart from './PageViewsBarChart';
+import Search from './Search';
+import SelectContent from './SelectContent';
+import StatCard from './StatCard';
+import Copyright from './CopyRight';
+import { IndiaFlag, BrazilFlag, UsaFlag, GlobeFlag } from './CustomIcon';
+import { columns, rows, renderAvatar } from './GridData';
+import SessionsChart from './SessionsChart';
+import ColorModeIconDropdown from './ColorModeIconDropdown';
 
+export * from './Customizations';
 export {
+  ColorModeIconDropdown,
+  SessionsChart,
+  columns,
+  rows,
+  renderAvatar,
   SitemarkIcon,
   ForgotPassword,
   FacebookIcon,
@@ -18,4 +40,20 @@ export {
   navigationCustomizations,
   surfacesCustomizations,
   ColorModeSelect,
+  CardAlert,
+  CustomDatePicker,
+  CustomizedTreeView,
+  HighlightedCard,
+  MenuButton,
+  MenuContent,
+  NavbarBreadcrumbs,
+  PageViewsBarChart,
+  Search,
+  SelectContent,
+  StatCard,
+  Copyright,
+  IndiaFlag,
+  BrazilFlag,
+  UsaFlag,
+  GlobeFlag,
 };
