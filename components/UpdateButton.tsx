@@ -2,8 +2,8 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Typography } from '@mui/material';
-import { fetchAllUsers } from '../store/actions';
 import { RootState, AppDispatch } from '../store/store'; // Adjust the import path as necessary
+import { fetchAllUsers } from '../store/actions/userActions';
 
 export default function UpdateButton() {
   const dispatch = useDispatch<AppDispatch>();

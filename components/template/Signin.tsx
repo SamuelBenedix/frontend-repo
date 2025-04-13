@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,30 +6,84 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
-import { useRouter } from 'next/navigation';
-import { loginSuccess } from '../../store/actions/loginAction';
-import { useDispatch } from 'react-redux';
-import { AppTheme, ForgotPassword, ColorModeSelect } from '../../components';
-import { Card, SignInContainer } from './styles';
+import Stack from '@mui/material/Stack';
+import MuiCard from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
+import { AppTheme } from '../molecules';
+import { ForgotPassword, ColorModeSelect } from '../atoms';
+
+const Card = styled(MuiCard)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'center',
+  width: '100%',
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+  margin: 'auto',
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '450px',
+  },
+  boxShadow:
+    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+  ...theme.applyStyles('dark', {
+    boxShadow:
+      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+  }),
+}));
+
+const SignInContainer = styled(Stack)(({ theme }) => ({
+  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+  minHeight: '100%',
+  padding: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(4),
+  },
+  '&::before': {
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    zIndex: -1,
+    inset: 0,
+    backgroundImage:
+      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+    backgroundRepeat: 'no-repeat',
+    ...theme.applyStyles('dark', {
+      backgroundImage:
+        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+    }),
+  },
+}));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
-  const router = useRouter();
-  const dispatch = useDispatch();
-
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-  const validateInputs = (email: string, password: string) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    if (emailError || passwordError) {
+      event.preventDefault();
+      return;
+    }
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
+
+  const validateInputs = () => {
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+
     let isValid = true;
 
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
       isValid = false;
@@ -40,7 +92,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       setEmailErrorMessage('');
     }
 
-    if (!password || password.length < 6) {
+    if (!password.value || password.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
@@ -50,26 +102,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     }
 
     return isValid;
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email') as string;
-    const password = data.get('password') as string;
-
-    if (!validateInputs(email, password)) return;
-
-    try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      const token = await response.user.getIdToken();
-      dispatch(loginSuccess(token));
-      router.push('/');
-    } catch (err) {
-      console.error('Login failed:', err);
-      setPasswordError(true);
-      setPasswordErrorMessage('Invalid email or password.');
-    }
   };
 
   return (
@@ -87,7 +119,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           >
             Sign in
           </Typography>
-
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -109,13 +140,13 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 name="email"
                 placeholder="your@email.com"
                 autoComplete="email"
+                autoFocus
                 required
                 fullWidth
                 variant="outlined"
                 color={emailError ? 'error' : 'primary'}
               />
             </FormControl>
-
             <FormControl>
               <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
@@ -126,6 +157,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                autoFocus
                 required
                 fullWidth
                 variant="outlined"
@@ -134,8 +166,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
 
             <ForgotPassword open={open} handleClose={handleClose} />
-
-            <Button type="submit" fullWidth variant="contained">
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={validateInputs}
+            >
               Sign in
             </Button>
           </Box>
