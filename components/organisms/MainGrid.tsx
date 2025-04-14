@@ -11,6 +11,7 @@ interface Props {
   onClick?: () => void;
   data?: [];
   status?: string;
+  text?: string;
 }
 
 export default function MainGrid(props: Props) {
@@ -22,10 +23,15 @@ export default function MainGrid(props: Props) {
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Details
       </Typography>
+      <Button
+        sx={{ marginBottom: '10px' }}
+        variant="contained"
+        onClick={props.onClick}
+        loading={loading}
+      >
+        {props.text}
+      </Button>
       <Grid container spacing={2} columns={12}>
-        <Button variant="contained" onClick={props.onClick} loading={loading}>
-          Fetch Data User
-        </Button>
         {/* {error && <Typography>{error as string}</Typography>} */}
         <Grid size={{ xs: 12, lg: 12 }}>
           <CustomizedDataGrid data={props.data} />

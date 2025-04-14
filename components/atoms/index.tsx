@@ -19,17 +19,17 @@ import SelectContent from './SelectContent';
 import StatCard from './StatCard';
 import Copyright from './CopyRight';
 import { IndiaFlag, BrazilFlag, UsaFlag, GlobeFlag } from './CustomIcon';
-import { columns, rows, renderAvatar } from './GridData';
+import { columns } from './GridData';
 import SessionsChart from './SessionsChart';
+import Modal from './Modal';
 import ColorModeIconDropdown from './ColorModeIconDropdown';
 
 export * from './Customizations';
 export {
+  Modal,
   ColorModeIconDropdown,
   SessionsChart,
   columns,
-  rows,
-  renderAvatar,
   SitemarkIcon,
   ForgotPassword,
   FacebookIcon,

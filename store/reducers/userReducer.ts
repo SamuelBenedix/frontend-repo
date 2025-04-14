@@ -4,7 +4,8 @@ import {
   FETCH_USER_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
-  LOGIN_SUCCESS
+  LOGIN_SUCCESS,
+  GET_USER_SUCCESS
 } from "../constant";
 
 
@@ -13,6 +14,7 @@ const initialState = {
   user: null,
   error: '',
   token: null,
+  userId: null,
 };
 
 
@@ -33,6 +35,8 @@ export default function userReducer(state = initialState, action: {
       return { loading: false, token: action.payload, error: null };
     case LOGIN_FAILURE:
       return { loading: false, error: action.payload };
+    case GET_USER_SUCCESS:
+      return { loading: false, userId: action.payload };
 
     default:
       return state;
