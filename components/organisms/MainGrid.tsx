@@ -35,7 +35,7 @@ export default function MainGrid(props: Props) {
       </Button>
       <Grid container spacing={2} columns={12}>
         {error && <Typography>{error}</Typography>}
-        <Grid>
+        <Grid size={{ xs: 12, lg: 12 }}>
           <CustomizedDataGrid
             data={props.data || []}
             onOpenModal={props.onUpdateModal}
