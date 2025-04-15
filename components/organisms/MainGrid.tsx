@@ -6,16 +6,19 @@ import { CustomizedDataGrid } from '../molecules';
 import { Button, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-
+import { UserTypes } from '../../entities/userInterface';
 interface Props {
   onClick?: () => void;
-  data?: [];
+  data?: UserTypes[];
   status?: string;
   text?: string;
+  onUpdateModal: (rowData: { id: string }) => void;
 }
 
 export default function MainGrid(props: Props) {
-  const { loading } = useSelector((state: RootState) => state.user);
+  const { loading, error } = useSelector(
+    (state: RootState) => state.user as { loading: boolean; error: string }
+  );
   console.log('MainGrid props', props.data);
 
   return (
@@ -27,14 +30,16 @@ export default function MainGrid(props: Props) {
         sx={{ marginBottom: '10px' }}
         variant="contained"
         onClick={props.onClick}
-        loading={loading}
       >
-        {props.text}
+        {loading ? 'Loading...' : props.text}
       </Button>
       <Grid container spacing={2} columns={12}>
-        {/* {error && <Typography>{error as string}</Typography>} */}
-        <Grid size={{ xs: 12, lg: 12 }}>
-          <CustomizedDataGrid data={props.data} />
+        {error && <Typography>{error}</Typography>}
+        <Grid>
+          <CustomizedDataGrid
+            data={props.data || []}
+            onOpenModal={props.onUpdateModal}
+          />
         </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />

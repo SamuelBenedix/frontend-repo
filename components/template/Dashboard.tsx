@@ -15,12 +15,18 @@ import { AppTheme, Header } from '../molecules';
 import { useSelector, useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../store/store';
 import { RootState } from '../../store/store';
-import { fetchAllUsers, createUser } from '../../store/actions/userActions';
+import {
+  fetchAllUsers,
+  createUser,
+  fetchUserById,
+  updateUser,
+} from '../../store/actions/userActions';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { UserTypes } from '../../entities/userInterface';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -31,12 +37,18 @@ const xThemeComponents = {
 
 const DashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.user) as {
-    user: [] | undefined;
-  };
+  const { user, userData } = useSelector(
+    (state: RootState) =>
+      state.user as unknown as {
+        userData: UserTypes;
+        user: UserTypes | [];
+      }
+  );
   const [error, setError] = React.useState('');
+  const [isEdit, setIsEdit] = React.useState(false);
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   const [data, setData] = React.useState({
+    id: '',
     name: '',
     numberOfRents: '',
     totalAverageWeightRatings: '',
@@ -59,11 +71,13 @@ const DashboardPage = () => {
   const onSubmit = async () => {
     setError('');
     try {
-      // Add your submit logic here
-      console.log('Data to be submitted:', data);
-      await dispatch(createUser(data));
-      // Reset the form
+      if (isEdit) {
+        await dispatch(updateUser(userData.id, data));
+      } else {
+        await dispatch(createUser(data));
+      }
       setData({
+        id: '',
         name: '',
         numberOfRents: '',
         totalAverageWeightRatings: '',
@@ -75,6 +89,18 @@ const DashboardPage = () => {
       console.error('Error submitting data:', error);
     }
   };
+
+  React.useEffect(() => {
+    if (userData) {
+      setData((prevData) => ({
+        ...prevData,
+        name: userData.name,
+        numberOfRents: userData.numberOfRents,
+        totalAverageWeightRatings: userData.totalAverageWeightRatings,
+        recentlyActive: new Date(userData.recentlyActive),
+      }));
+    }
+  }, [userData]);
 
   return (
     <AppTheme themeComponents={xThemeComponents}>
@@ -104,8 +130,14 @@ const DashboardPage = () => {
               <MainGrid
                 onClick={() => {
                   setIsOpenModal(true);
+                  setIsEdit(false);
                 }}
-                data={user}
+                onUpdateModal={(rowData: { id: string }) => {
+                  dispatch(fetchUserById(rowData.id));
+                  setIsOpenModal(true);
+                  setIsEdit(true);
+                }}
+                data={Array.isArray(user) ? user : []}
                 status={error}
                 text="Create User"
               />

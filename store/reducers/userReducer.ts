@@ -8,13 +8,20 @@ import {
   GET_USER_SUCCESS
 } from "../constant";
 
+import { UserState } from "../../entities/userInterface";
 
-const initialState = {
+const initialState: UserState = {
   loading: false,
-  user: null,
+  user: [],
   error: '',
   token: null,
-  userId: null,
+  userData: {
+    id: '',
+    name: '',
+    numberOfRents: '',
+    totalAverageWeightRatings: '',
+    recentlyActive: new Date(),
+  },
 };
 
 
@@ -36,7 +43,7 @@ export default function userReducer(state = initialState, action: {
     case LOGIN_FAILURE:
       return { loading: false, error: action.payload };
     case GET_USER_SUCCESS:
-      return { loading: false, userId: action.payload };
+      return { ...state, loading: false, userData: action.payload };
 
     default:
       return state;

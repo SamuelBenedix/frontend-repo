@@ -1,17 +1,39 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { columns } from '../atoms';
+import { Button } from '@mui/material';
+import { UserTypes } from '../../entities/userInterface';
 
 interface Props {
-  data?: [];
+  data?: UserTypes[];
+  onOpenModal: (rowData: { id: string }) => void;
 }
 
 export default function CustomizedDataGrid(props: Props) {
-  const { data } = props;
+  const { data, onOpenModal } = props;
+
   return (
     <DataGrid
       rows={data}
-      columns={columns}
+      columns={[
+        ...columns,
+        {
+          field: 'action',
+          headerName: 'Action',
+          width: 150,
+          sortable: false,
+          renderCell: (params) => (
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={() => onOpenModal && onOpenModal(params.row)} // Call the modal opening function with row data
+            >
+              Edit
+            </Button>
+          ),
+        },
+      ]}
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
       }

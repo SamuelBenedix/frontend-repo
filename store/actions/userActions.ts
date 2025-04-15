@@ -2,6 +2,7 @@
 import { AppDispatch } from '../store';
 import { FETCH_USER_FAILURE, FETCH_USER_REQUEST, FETCH_USER_SUCCESS, GET_USER_SUCCESS } from '../constant';
 import api from '../../apis/api';
+import { UserTypes } from '../../entities/userInterface';
 
 export const fetchUsersRequest = () => ({
  type: FETCH_USER_REQUEST,
@@ -64,14 +65,19 @@ export const fetchUserById = (id: string) => {
  };
 };
 
-export const createUser = (userData: any) => {
+export const createUser = (userData: {
+ name: string,
+ numberOfRents: string;
+ totalAverageWeightRatings: string;
+ recentlyActive: Date,
+}) => {
  return async (dispatch: AppDispatch) => {
   dispatch(fetchUsersRequest());
   const authToken = localStorage.getItem('authToken');
 
   const userToCreate = {
    ...userData,
-   recentlyActive: `${userData.recentlyActive}`, // Use Firestore's Timestamp
+   recentlyActive: `${userData.recentlyActive}`,
   };
 
   try {
@@ -92,7 +98,7 @@ export const createUser = (userData: any) => {
 };
 
 // Update user by ID
-export const updateUser = (id: string, updatedData: any) => {
+export const updateUser = (id: string, updatedData: UserTypes) => {
  return async (dispatch: AppDispatch) => {
   dispatch(fetchUsersRequest());
   const authToken = localStorage.getItem('authToken');

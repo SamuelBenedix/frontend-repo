@@ -40,7 +40,6 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const [open, setOpen] = React.useState(openProp);
 
-  // Sync open state with prop
   React.useEffect(() => {
     setOpen(openProp);
   }, [openProp]);
